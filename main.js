@@ -3,6 +3,7 @@ var fs = require("fs");
 var url = require("url");
 var qs = require("querystring");
 var template = require("./lib/template.js");
+var path = require("path");
 
 var app = http.createServer(function (request, response) {
   var _url = request.url;
@@ -26,27 +27,24 @@ var app = http.createServer(function (request, response) {
       });
     } else {
       fs.readdir("./data", function (error, filelist) {
-        fs.readFile(
-          `data/${queryData.id}`,
-          "utf8",
-          function (err, description) {
-            var list = template.list(filelist);
-            var title = queryData.id;
-            var html = template.HTML(
-              title,
-              list,
-              `<h2>${title}</h2>${description}`,
-              `<a href="/create">create</a>
+        var filteredID = path.parse(queryData.id).base;
+        fs.readFile(`data/${filteredID}`, "utf8", function (err, description) {
+          var list = template.list(filelist);
+          var title = queryData.id;
+          var html = template.HTML(
+            title,
+            list,
+            `<h2>${title}</h2>${description}`,
+            `<a href="/create">create</a>
                <a href="/update?id=${title}">update</a>
                <form action="delete_process" method="post">
                 <input type="hidden" name="id" value="${title}">
                 <input type="submit" value="delete">
                </form>`
-            );
-            response.writeHead(200); // 서버가 브라우저에게 200을 주면 파일을 성공적으로 전송했다는 의미
-            response.end(html);
-          }
-        );
+          );
+          response.writeHead(200); // 서버가 브라우저에게 200을 주면 파일을 성공적으로 전송했다는 의미
+          response.end(html);
+        });
       });
     }
   } else if (pathname === "/create") {
@@ -88,7 +86,8 @@ var app = http.createServer(function (request, response) {
     });
   } else if (pathname === "/update") {
     fs.readdir("./data", function (error, filelist) {
-      fs.readFile(`data/${queryData.id}`, "utf8", function (err, description) {
+      var filteredID = path.parse(queryData.id).base;
+      fs.readFile(`data/${filteredID}`, "utf8", function (err, description) {
         var list = template.list(filelist);
         var title = queryData.id;
         var html = template.HTML(
@@ -137,7 +136,8 @@ var app = http.createServer(function (request, response) {
     request.on("end", function () {
       var post = qs.parse(body);
       var id = post.id;
-      fs.unlink(`data/${id}`, function (err) {
+      var filteredID = path.parse(id).base;
+      fs.unlink(`data/${filteredID}`, function (err) {
         response.writeHead(302, { Location: `/` }); // 리다이렉션
         response.end();
       });
