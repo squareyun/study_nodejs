@@ -1,16 +1,17 @@
 "use strict";
 
-// ¸ðµâ
-const express = require("express"); // express ¸ðµâ ´Ù¿î ¹Þ±â
-const app = express(); // ½ÇÇà½ÃÄÑ¼­ º¯¼ö¾È¿¡ ³Ö±â
+// ï¿½ï¿½ï¿½
+const express = require("express"); // express ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½ ï¿½Þ±ï¿½
+const app = express(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ ï¿½Ö±ï¿½
 
-// ¶ó¿ìÆÃ
+// ï¿½ï¿½ï¿½ï¿½ï¿½
 const home = require("./src/routes/home");
 
-// ¾Û ¼¼ÆÃ
+// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 app.set("views", "./src/views");
 app.set("view engine", "ejs");
+app.use(express.static(`${__dirname}/src/public`));
 
-app.use("/", home); // use -> ¹Ìµé ¿þ¾î¸¦ µî·ÏÇØÁÖ´Â ¸Þ¼­µå
+app.use("/", home); // use -> ï¿½Ìµï¿½ ï¿½ï¿½ï¿½î¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
 
 module.exports = app;
