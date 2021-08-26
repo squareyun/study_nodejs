@@ -3,6 +3,9 @@
 // 모듈
 const express = require("express"); // express 모듈 다운 받기
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express(); // 실행시켜서 변수안에 넣기
 
 // 라우팅
